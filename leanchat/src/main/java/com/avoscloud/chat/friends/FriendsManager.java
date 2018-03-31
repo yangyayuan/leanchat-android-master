@@ -1,5 +1,7 @@
 package com.avoscloud.chat.friends;
 
+import android.util.Log;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
@@ -8,6 +10,8 @@ import com.avoscloud.chat.util.UserCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 
 /**

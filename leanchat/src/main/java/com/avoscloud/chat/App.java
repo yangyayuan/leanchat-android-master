@@ -106,7 +106,6 @@ public class App extends Application {
     PushManager.getInstance().init(ctx);
     AVOSCloud.setDebugLogEnabled(debug);
     AVAnalytics.enableCrashReport(this, !debug);
-    //initBaiduMap();
     if (App.debug) {
       openStrictMode();
     }
@@ -127,7 +126,6 @@ public class App extends Application {
             .build());
   }
 
-//  private void initBaiduMap() {
-//    SDKInitializer.initialize(this);
-//  }
+
+
 }

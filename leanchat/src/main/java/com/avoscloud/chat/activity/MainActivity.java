@@ -61,7 +61,7 @@ public class MainActivity extends AVBaseActivity {
     findView();
     init();
 
-    conversationBtn.performClick();
+    discoverBtn.performClick();
 //    initBaiduLocClient();
 //    updateUserLocation();
     UserCacheUtils.cacheUser(LeanchatUser.getCurrentUser());
@@ -73,22 +73,6 @@ public class MainActivity extends AVBaseActivity {
     UpdateService updateService = UpdateService.getInstance(this);
     updateService.checkUpdate();
   }
-
-//  private void initBaiduLocClient() {
-//    locClient = new LocationClient(this.getApplicationContext());
-//    locClient.setDebug(true);
-//    LocationClientOption option = new LocationClientOption();
-//    option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-//    option.setScanSpan(5000);
-//    option.setIsNeedAddress(false);
-//    option.setCoorType("bd09ll");
-//    option.setIsNeedAddress(true);
-//    locClient.setLocOption(option);
-//
-//    locationListener = new MyLocationListener();
-//    locClient.registerLocationListener(locationListener);
-//    locClient.start();
-//  }
 
   private void init() {
     tabs = new Button[]{conversationBtn, contactBtn, discoverBtn, mySpaceBtn};

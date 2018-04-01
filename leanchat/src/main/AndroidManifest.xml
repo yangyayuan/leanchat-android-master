@@ -69,8 +69,6 @@
 
         <activity android:name=".activity.RegisterActivity"/>
 
-        <activity android:name=".activity.WhoIdLCIMConversationActivity"/>
-
         <activity android:name=".activity.UpdateContentActivity"/>
 
         <activity android:name=".friends.ContactNewFriendActivity"/>

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import cn.leancloud.chatkit.LCChatKit;
@@ -15,25 +14,19 @@ import cn.leancloud.chatkit.activity.LCIMConversationActivity;
 import cn.leancloud.chatkit.utils.LCIMConstants;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFriendship;
+import com.avos.avoscloud.AVFriendshipQuery;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.callback.AVFriendshipCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
-import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avoscloud.chat.R;
-import com.avoscloud.chat.activity.WhoIdLCIMConversationActivity;
-import com.avoscloud.chat.adapter.ContactsAdapter;
-import com.avoscloud.chat.friends.FriendsManager;
-import com.avoscloud.chat.model.ContactItem;
-import com.avoscloud.chat.model.LeanchatUser;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -51,19 +44,11 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.github.stuxuhai.jpinyin.PinyinFormat;
-import com.github.stuxuhai.jpinyin.PinyinHelper;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
-import static com.baidu.location.g.a.i;
 
 /**
  * Created by lzw on 14-9-17.发现
@@ -101,12 +86,12 @@ public class DiscoverFragment extends BaseFragment {
     mBaiduMap.setMyLocationConfiguration(config);//设置自定义定位模式，定位图标
 
     //定位SDK相关
-    mLocationClient = new LocationClient(getContext());//第一次初始化定位如果不能定位重置为appcontext
+    mLocationClient = new LocationClient(getActivity().getApplicationContext());//第一次初始化定位如果不能定位重置为appcontext
     mLocationClient.registerLocationListener(myListener);//注册定位客户端
     LocationClientOption option = new LocationClientOption();//定位客户端可选项
     option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//设置高精度定位模式
     option.setCoorType("bd09ll");//设置百度坐标系
-    option.setScanSpan(10000);//每发起一次定位数据的时间间隔1秒
+    option.setScanSpan(100000);//每发起一次定位数据的时间间隔1秒
     option.setOpenGps(true);//打开GPS数据
     option.setLocationNotify(true);//可选，设置是否当GPS有效时按照1S/1次频率输出GPS结果
     option.setIgnoreKillProcess(true);//可选，定位SDK内部是一个service，并放到了独立进程。
@@ -114,62 +99,52 @@ public class DiscoverFragment extends BaseFragment {
     mLocationClient.start();//启动定位终端
 //
     //在地图上用marker显示所有的好友位置1获取ID 2获取位置 3绘制marker
-    AVQuery<AVUser> followeeQuery = AVUser.followeeQuery(currentUserID, AVUser.class);
-    followeeQuery.findInBackground(new FindCallback<AVUser>() {
+    AVQuery<AVUser> query = AVUser.followeeQuery(currentUserID, AVUser.class);
+    query.include("followee");//follee的所有属性
+    query.findInBackground(new FindCallback<AVUser>() {
       @Override
-      public void done(List<AVUser> avObjects, AVException avException) {//偶像查询
-        //avObjects 就是用户偶像列表|||第一步完成
-
-        for (AVUser avObject : avObjects) {//从avobjects依次获取avobject
-          final String whoId = avObject.getObjectId();//获取这一次循环对象的ID
-
-          AVQuery<AVObject> frdAvQuery = new AVQuery<>("AVUser");//构建AVUser表的frdavQuery查询
-          frdAvQuery.getInBackground(whoId, new GetCallback<AVObject>() {//把这次得到的ID传入参数
+      public void done(List<AVUser> list, AVException e) {
+        for(final AVUser user : list){
+           final String whoId = user.getObjectId();//获取这一次循环对象的ID
+          final  AVGeoPoint wholoc = user.getAVGeoPoint("location");
+          final double wholat = wholoc.getLatitude();
+          final double wholon = wholoc.getLongitude();
+          final LatLng point = new LatLng(wholat, wholon);
+          OverlayOptions option =  new MarkerOptions()
+                  .position(point).icon(mCurrentMarker);
+          mBaiduMap.addOverlay(option);//在地图上添加这次ID的marker
+          //第三步绘制这次ID的marker
+          mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {//设置marker点击监听
             @Override
-            public void done(final AVObject avObject, AVException e) {
-              final AVGeoPoint wholoc = avObject.getAVGeoPoint("location");//2获取这次对象的位置
-              final String username = avObject.getString("username");
-              Log.d(TAG, "done: "+username);
-              //预留获取who的头像加入到markeroptions.icon中
-              final double wholat = wholoc.getLatitude();
-              final double wholon = wholoc.getLongitude();
-              final LatLng point = new LatLng(wholat, wholon);
-              OverlayOptions option =  new MarkerOptions()
-                      .position(point).icon(mCurrentMarker);
-
-              mBaiduMap.addOverlay(option);//在地图上添加这次ID的marker
-
-              //第三步绘制这次ID的marker
-              mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {//设置marker点击监听
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                  LatLng p = marker.getPosition();//得到地图点击点的经纬度
-                  String userId = null;
-                  DecimalFormat df = new DecimalFormat("0.00000");//java格式化浮点数工具
-                  if (df.format(p.latitude).equals(df.format(wholat))&&
+            public boolean onMarkerClick(Marker marker) {
+              LatLng p = marker.getPosition();//得到地图点击点的经纬度
+              String userId = null;
+              DecimalFormat df = new DecimalFormat("0.00000");//java格式化浮点数工具
+              if (df.format(p.latitude).equals(df.format(wholat))&&
                       df.format(p.longitude).equals(df.format(wholon))) {
-                    userId = avObject.getObjectId();//如果点击的点和用户的经纬度一样
-                  }
-                  if (userId!=null)//如果USERID不为空则打开对话框
-                  LCChatKit.getInstance().open(currentUserID, new AVIMClientCallback() {
-                    @Override
-                    public void done(AVIMClient avimClient, AVIMException e) {
-                      if (null == e) {
-                        Intent intent = new Intent(getContext(), LCIMConversationActivity.class);
-                        intent.putExtra(LCIMConstants.PEER_ID, whoId);
-                        startActivity(intent);
-                      }
+                userId = user.getObjectId();//如果点击的点和用户的经纬度一样
+              }
+              if (userId!=null)//如果USERID不为空则打开对话框
+                LCChatKit.getInstance().open(currentUserID, new AVIMClientCallback() {
+                  @Override
+                  public void done(AVIMClient avimClient, AVIMException e) {
+                    if (null == e) {
+                      Intent intent = new Intent(getContext(), LCIMConversationActivity.class);
+                      intent.putExtra(LCIMConstants.PEER_ID, whoId);
+                      startActivity(intent);
                     }
-                  });
-                  return false;
-                }
-              });
-              //点击事件结束
+                  }
+                });
+              return false;
             }
           });
+          //点击事件结束
+          Log.d(TAG, "done: "+whoId);
         }
+
       }
     });
+
 
 
     return view;

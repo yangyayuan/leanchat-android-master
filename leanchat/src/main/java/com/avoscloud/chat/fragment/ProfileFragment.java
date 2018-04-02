@@ -42,7 +42,7 @@ public class ProfileFragment extends BaseFragment {
   private static final int CROP_REQUEST = 2;
 
   @Bind(R.id.profile_avatar_view)
-  ImageView avatarView;
+  ImageView avatarView;//初始化头像布局
 
   @Bind(R.id.profile_username_view)
   TextView userNameView;
@@ -126,7 +126,7 @@ public class ProfileFragment extends BaseFragment {
     }
   }
 
-  public Uri startImageCrop(Uri uri, int outputX, int outputY, int requestCode) {
+  public Uri startImageCrop(Uri uri, int outputX, int outputY, int requestCode) {//剪裁头像
     Intent intent = new Intent("com.android.camera.action.CROP");
     intent.setDataAndType(uri, "image/*");
     intent.putExtra("crop", "true");
@@ -145,7 +145,7 @@ public class ProfileFragment extends BaseFragment {
     return outputUri;
   }
 
-  private String saveCropAvatar(Intent data) {
+  private String saveCropAvatar(Intent data) {//保存剪裁头像
     Bundle extras = data.getExtras();
     String path = null;
     if (extras != null) {

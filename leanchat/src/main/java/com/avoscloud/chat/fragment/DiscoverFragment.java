@@ -24,6 +24,7 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.callback.AVFriendshipCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.chat.R;
@@ -56,11 +57,13 @@ import static android.content.ContentValues.TAG;
 public class DiscoverFragment extends BaseFragment {
 
   String currentUserID = AVUser.getCurrentUser().getObjectId();
+  private AVIMConversation conversation;//会话
 
   //定位相关
   public LocationClient mLocationClient = null;//定位
   private MyLocationListener myListener = new MyLocationListener();//位置监听
   boolean isFirstLoc = true; // 是否首次定位
+
 
   //地图层相关
   private MapView mMapView ;//view层
@@ -139,13 +142,9 @@ public class DiscoverFragment extends BaseFragment {
             }
           });
           //点击事件结束
-          Log.d(TAG, "done: "+whoId);
         }
-
       }
     });
-
-
 
     return view;
   }

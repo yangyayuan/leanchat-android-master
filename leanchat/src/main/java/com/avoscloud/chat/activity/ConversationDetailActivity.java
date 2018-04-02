@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,9 +37,11 @@ import cn.leancloud.chatkit.LCChatKit;
 import cn.leancloud.chatkit.cache.LCIMConversationItemCache;
 import cn.leancloud.chatkit.utils.LCIMConstants;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by lzw on 14-10-11.
- * 群聊详情
+ * 群聊设置详情
  */
 public class ConversationDetailActivity extends AVBaseActivity {
   private static final int ADD_MEMBERS = 0;
@@ -63,6 +66,7 @@ public class ConversationDetailActivity extends AVBaseActivity {
     setContentView(R.layout.conversation_detail_activity);
     String conversationId = getIntent().getStringExtra(LCIMConstants.CONVERSATION_ID);
     conversation = LCChatKit.getInstance().getClient().getConversation(conversationId);
+
 
     View footerView = getLayoutInflater().inflate(R.layout.conversation_detail_footer_layout, null);
     nameLayout = footerView.findViewById(R.id.name_layout);

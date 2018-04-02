@@ -16,6 +16,7 @@ import com.avoscloud.chat.R;
 import com.avoscloud.chat.fragment.ConversationListFragment;
 import com.avoscloud.chat.fragment.DiscoverFragment;
 import com.avoscloud.chat.fragment.ProfileFragment;
+import com.avoscloud.chat.fragment.WebFragment;
 import com.avoscloud.chat.friends.ContactFragment;
 import com.avoscloud.chat.model.LeanchatUser;
 import com.avoscloud.chat.redpacket.RedPacketUtils;
@@ -30,24 +31,26 @@ import com.avoscloud.chat.util.Utils;
  * Created by lzw on 14-9-17.
  */
 public class MainActivity extends AVBaseActivity {
-  public static final int FRAGMENT_N = 4;
-  public static final int[] tabsNormalBackIds = new int[]{R.drawable.tabbar_chat,
+  public static final int FRAGMENT_N = 5;
+  public static final int[] tabsNormalBackIds = new int[]{R.drawable.tabbar_chat,R.drawable.tabbar_chat,
       R.drawable.tabbar_contacts, R.drawable.tabbar_discover, R.drawable.tabbar_me};
-  public static final int[] tabsActiveBackIds = new int[]{R.drawable.tabbar_chat_active,
+  public static final int[] tabsActiveBackIds = new int[]{R.drawable.tabbar_chat_active,R.drawable.tabbar_chat_active,
       R.drawable.tabbar_contacts_active, R.drawable.tabbar_discover_active,
       R.drawable.tabbar_me_active};
   private static final String FRAGMENT_TAG_CONVERSATION = "conversation";
+  private static final String FRAGMENT_TAG_web = "web";
   private static final String FRAGMENT_TAG_CONTACT = "contact";
   private static final String FRAGMENT_TAG_DISCOVER = "discover";
   private static final String FRAGMENT_TAG_PROFILE = "profile";
-  private static final String[] fragmentTags = new String[]{FRAGMENT_TAG_CONVERSATION, FRAGMENT_TAG_CONTACT,
+  private static final String[] fragmentTags = new String[]{FRAGMENT_TAG_CONVERSATION, FRAGMENT_TAG_web,FRAGMENT_TAG_CONTACT,
       FRAGMENT_TAG_DISCOVER, FRAGMENT_TAG_PROFILE};
 
 //  public LocationClient locClient;
  // public MyLocationListener locationListener;
-  Button conversationBtn, contactBtn, discoverBtn, mySpaceBtn;
+  Button conversationBtn,webBtn, contactBtn, discoverBtn, mySpaceBtn;
   View fragmentContainer;
   ContactFragment contactFragment;
+  WebFragment webFragment;
   DiscoverFragment discoverFragment;
   ConversationListFragment conversationListFragment;
   ProfileFragment profileFragment;
@@ -75,11 +78,12 @@ public class MainActivity extends AVBaseActivity {
   }
 
   private void init() {
-    tabs = new Button[]{conversationBtn, contactBtn, discoverBtn, mySpaceBtn};
+    tabs = new Button[]{conversationBtn, webBtn,contactBtn, discoverBtn, mySpaceBtn};
   }
 
   private void findView() {
     conversationBtn = (Button) findViewById(R.id.btn_message);
+    webBtn = (Button) findViewById(R.id.btn_web);
     contactBtn = (Button) findViewById(R.id.btn_contact);
     discoverBtn = (Button) findViewById(R.id.btn_discover);
     mySpaceBtn = (Button) findViewById(R.id.btn_my_space);
@@ -100,6 +104,12 @@ public class MainActivity extends AVBaseActivity {
         transaction.add(R.id.fragment_container, conversationListFragment, FRAGMENT_TAG_CONVERSATION);
       }
       transaction.show(conversationListFragment);
+    } else if (id == R.id.btn_web) {
+      if (webFragment == null) {
+        webFragment = new WebFragment();
+        transaction.add(R.id.fragment_container, webFragment, FRAGMENT_TAG_web);
+      }
+      transaction.show(webFragment);
     } else if (id == R.id.btn_contact) {
       if (contactFragment == null) {
         contactFragment = new ContactFragment();

@@ -65,6 +65,7 @@ public class LeanchatUser extends AVUser {
     }
   }
 
+
   public static LeanchatUser getCurrentUser() {
     return getCurrentUser(LeanchatUser.class);
   }

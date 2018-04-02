@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +24,21 @@ import com.avoscloud.chat.model.LeanchatUser;
 import com.avoscloud.chat.service.PushManager;
 import com.avoscloud.chat.service.UpdateService;
 import com.avoscloud.chat.util.PathUtils;
+import com.avoscloud.chat.util.PhotoUtils;
 import com.avoscloud.chat.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.yunzhanghu.redpacketui.utils.RPRedPacketUtil;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.leancloud.chatkit.LCChatKit;
+
+import static com.avos.avoscloud.AVAnalytics.TAG;
 
 /**
  * Created by lzw on 14-9-17.我的页面
@@ -121,13 +127,14 @@ public class ProfileFragment extends BaseFragment {
       } else if (requestCode == CROP_REQUEST) {
         final String path = saveCropAvatar(data);
         LeanchatUser user = LeanchatUser.getCurrentUser();
-        user.saveAvatar(path, null);
+        user.saveAvatar(path,null);
       }
     }
   }
 
   public Uri startImageCrop(Uri uri, int outputX, int outputY, int requestCode) {//剪裁头像
-    Intent intent = new Intent("com.android.camera.action.CROP");
+    Intent intent = null;
+    intent = new Intent("com.android.camera.action.CROP");
     intent.setDataAndType(uri, "image/*");
     intent.putExtra("crop", "true");
     intent.putExtra("aspectX", 1);
@@ -160,4 +167,32 @@ public class ProfileFragment extends BaseFragment {
     }
     return path;
   }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

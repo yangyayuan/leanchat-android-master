@@ -7,9 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/myfab"
@@ -25,6 +29,9 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <include layout="@layout/common_header_layout" />
+
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"

@@ -14,6 +14,7 @@ import cn.leancloud.chatkit.activity.LCIMConversationActivity;
 import cn.leancloud.chatkit.utils.LCIMConstants;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVFriendship;
 import com.avos.avoscloud.AVFriendshipQuery;
 import com.avos.avoscloud.AVGeoPoint;
@@ -109,6 +110,8 @@ public class DiscoverFragment extends BaseFragment {
       public void done(List<AVUser> list, AVException e) {
         for(final AVUser user : list){
            final String whoId = user.getObjectId();//获取这一次循环对象的ID
+          final AVFile avatar = user.getAVFile("avatar");
+          Log.d(TAG, "donenenene: "+avatar);//打印出这次循环对象的头像
           final  AVGeoPoint wholoc = user.getAVGeoPoint("location");
           final double wholat = wholoc.getLatitude();
           final double wholon = wholoc.getLongitude();
@@ -177,6 +180,36 @@ public class DiscoverFragment extends BaseFragment {
       user.saveInBackground();//异步执行上传位置数据
     }
   }
+
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+    mMapView.onDestroy();
+    mLocationClient.stop();
+    Log.d(TAG, "donenenennnnnn: ");
+  }
+  @Override
+  public void onResume() {
+    super.onResume();
+    //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
+    mMapView.onResume();
+  }
+  @Override
+  public void onPause() {
+    super.onPause();
+    //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
+    mMapView.onPause();
+  }
+
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    headerLayout.showTitle("发现");
+  }
+
 
 }
 

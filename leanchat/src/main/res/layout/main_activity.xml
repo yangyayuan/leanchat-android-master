@@ -26,7 +26,7 @@
             android:paddingBottom="2dip"
             android:paddingTop="7dip"
             android:scaleType="matrix"
-            android:text="web"
+            android:text="网页"
             android:textColor="@drawable/tab_textcolor"
             android:textSize="12sp" />
 

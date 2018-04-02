@@ -35,6 +35,20 @@ public class PathUtils {
     return new File(getAvailableCacheDir(), "avatar_crop").getAbsolutePath();
   }
 
+  public static String getAvatarDir() {
+    String dir = getAppPath() + "avatar/";
+    return checkAndMkdirs(dir);
+  }
+
+  public static String getAppPath() {
+    String dir = getSDcardDir() + "gathering/";
+    return checkAndMkdirs(dir);
+  }
+
+  public static String getSDcardDir() {
+    return Environment.getExternalStorageDirectory().getPath() + "/";
+  }
+
   public static String getAvatarTmpPath() {
     return new File(getAvailableCacheDir(), "avatar_tmp").getAbsolutePath();
   }

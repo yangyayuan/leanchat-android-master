@@ -69,7 +69,7 @@
 
         <activity android:name=".activity.WebSiteActivity"/>
 
-        <activity android:name=".activity.SendMsgWeb"/>
+        <activity android:name=".activity.SendMsgWeb" android:theme="@style/LCIMActivity.NoActionBar"/>
 
         <activity android:name=".activity.RegisterActivity"/>
 

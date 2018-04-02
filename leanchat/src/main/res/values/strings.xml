@@ -84,7 +84,7 @@
     <string name="conversation_detail_invite">邀请</string>
     <string name="conversation_quitGroup">退群</string>
     <string name="conversation_quit_group_tip">确定要退出该群组？</string>
-    
+
     <string name="utils_kilometres">公里</string>
     <string name="profile_fragment_checkUpdate">检查更新</string>
     <string name="discover_fragment_sort">排序</string>

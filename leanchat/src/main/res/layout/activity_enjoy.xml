@@ -15,7 +15,7 @@
             android:id="@+id/line1t"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="时间："/>
+            android:text="名字："/>
 
         <EditText
             android:id="@+id/line1e"
@@ -35,7 +35,7 @@
             android:id="@+id/line2t"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="地点："
+            android:text="电话："
             android:textColor="#000000"/>
 
         <EditText
@@ -56,7 +56,7 @@
             android:id="@+id/line3t"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="人物："/>
+            android:text="图片："/>
 
         <EditText
             android:id="@+id/line3e"
@@ -76,7 +76,7 @@
             android:id="@+id/line4t"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="事件"/>
+            android:text="性别"/>
 
         <EditText
             android:id="@+id/line4e"
@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/entry_blue"
-        android:text="发布"/>
+        android:text="提交"/>
 
 
 

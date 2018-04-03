@@ -7,11 +7,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.avoscloud.chat.R;
 import com.avoscloud.chat.activity.SendMsgWeb;
 import com.avoscloud.chat.activity.WebSiteActivity;
@@ -19,7 +25,12 @@ import com.avoscloud.chat.adapter.ListViewAdapter;
 import com.avoscloud.chat.adapter.OneAdapter;
 import com.avoscloud.chat.adapter.TwoAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by 10714 on 2018/4/1.
@@ -32,6 +43,7 @@ public class WebFragment extends BaseFragment {
     private OneAdapter oneAdapter;
     private TwoAdapter twoAdapter;
     private RecyclerView recyclerView;
+    private List<AVObject> mList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -40,9 +52,14 @@ public class WebFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.web_fragment, container, false);
         ButterKnife.bind(this, view);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_recyclerView);
-        listAdapter = new ListViewAdapter(getActivity().getApplicationContext());
+        //listAdapter = new ListViewAdapter(getActivity().getApplicationContext());
         oneAdapter = new OneAdapter(getActivity().getApplicationContext());
         twoAdapter = new TwoAdapter(getActivity().getApplicationContext());
+
+        recyclerView.setHasFixedSize(true);
+       // recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        listAdapter = new ListViewAdapter(mList,getActivity().getApplicationContext());
+       // recyclerView.setAdapter(listAdapter);
 
         FloatingActionButton myFab = (FloatingActionButton)view.findViewById(R.id.myfab);
 
@@ -105,6 +122,32 @@ public class WebFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         headerLayout.showTitle("网页");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //AVAnalytics.onResume(this);
+        initData();
+    }
+
+    private void initData() {
+        mList.clear();
+        AVQuery<AVObject> avQuery = new AVQuery<>("Product");
+        avQuery.orderByDescending("createdAt");
+        avQuery.include("owner");
+        avQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    mList.addAll(list);
+                    Log.d(TAG, "done: "+mList);
+                    listAdapter.notifyDataSetChanged();
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

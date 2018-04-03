@@ -104,6 +104,7 @@ public class App extends Application {
     RedPacket.getInstance().setDebugMode(false);
 
     PushManager.getInstance().init(ctx);
+    //AVOSCloud.initialize(this,"OLoj899IwHYi787ClrImlr3k-gzGzoHsz", "gkz35mRTqTE2aqwp7dEr5uEE");
     AVOSCloud.setDebugLogEnabled(debug);
     AVAnalytics.enableCrashReport(this, !debug);
     if (App.debug) {
